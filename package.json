@@ -1,11 +1,12 @@
 {
   "name": "anidata-api",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/app.ts",
   "scripts": {
     "build": "npx tsc",
     "start": "node build/app.js",
-    "dev": "nodemon src/app.ts"
+    "dev": "nodemon src/app.ts",
+    "vercel-build": "npm run build"
   },
   "keywords": [],
   "author": "",
