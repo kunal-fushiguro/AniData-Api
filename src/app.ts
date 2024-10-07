@@ -15,7 +15,7 @@ const rate = rateLimit({
 
 app.use(cors({ origin: "*", credentials: true }));
 app.use(express.urlencoded({ extended: true }));
-app.use();
+app.use(rate);
 app.use("/api/v1", routes);
 
 app.listen(PORT || 5000, async () => {
