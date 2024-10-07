@@ -5,8 +5,7 @@
   "scripts": {
     "build": "npx tsc",
     "start": "node build/app.js",
-    "dev": "nodemon src/app.ts",
-    "vercel-build": "npm run build"
+    "dev": "nodemon src/app.ts"
   },
   "keywords": [],
   "author": "",
