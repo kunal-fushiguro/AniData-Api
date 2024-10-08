@@ -1,12 +1,13 @@
 import mongoose from "mongoose";
 import { MONGODB_URL } from "../config/config";
+import { logger } from "../logs/config";
 
 async function ConnectDb() {
   try {
     await mongoose.connect(String(MONGODB_URL), { dbName: "Anidata-Api" });
-    console.log("Database Connection ");
+    logger.info("Database Connection ");
   } catch (error: any) {
-    console.log("Error While Connectiong Database");
+    logger.error(`Error While Connectiong Database : ${error.message}`);
     process.exit(1);
   }
 }

@@ -1,3 +1,4 @@
+import { logger } from "../logs/config";
 import { redis_url } from "../config/config";
 import { createClient, RedisClientType } from "redis";
 
@@ -11,24 +12,42 @@ export class Caches {
   async connectToRedis() {
     try {
       await this.cacheClient.connect();
-      console.log("Connect to redis");
+      logger.info("Connect to redis");
     } catch (error: any) {
-      console.log("Error While Connecting to redis Server ", error);
+      logger.error("Error While Connecting to redis Server ", error);
     }
   }
 
   // get the data
   async getData(key: string): Promise<any> {
-    return await this.cacheClient.get(key);
+    try {
+      return await this.cacheClient.get(key);
+    } catch (error: any) {
+      logger.error(
+        `Error Occured while getting the data from redis : ${error.message}`
+      );
+    }
   }
 
   //   set the data
   async setData(key: string, value: string, expireIn: number): Promise<any> {
-    await this.cacheClient.set(key, value);
-    await this.cacheClient.expire(key, expireIn);
+    try {
+      await this.cacheClient.set(key, value);
+      await this.cacheClient.expire(key, expireIn);
+    } catch (error: any) {
+      logger.error(
+        `Error Occured while getting the data from redis : ${error.message}`
+      );
+    }
   }
 
   async removeData(key: string): Promise<any> {
-    await this.cacheClient.del(key);
+    try {
+      await this.cacheClient.del(key);
+    } catch (error: any) {
+      logger.error(
+        `Error Occured while getting the data from redis : ${error.message}`
+      );
+    }
   }
 }

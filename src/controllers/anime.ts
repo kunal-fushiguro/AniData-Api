@@ -5,11 +5,14 @@ import { ApiResponse } from "../utils/ApiResponse";
 import { Request, Response } from "express";
 import { Genres } from "../models/gerne";
 import { redisCaches } from "../app";
+import { logger } from "../logs/config";
 
 async function test(Request: Request, Response: Response) {
   try {
+    logger.info(`Method : ${Request.method} IP : ${Request.ip}`);
     Response.json(new ApiResponse(200, "ok", true, {}));
   } catch (error: any) {
+    logger.error(`Error : ${error.message}`);
     Response.json(
       new ApiResponse(
         error.statusCode || 500,
@@ -26,6 +29,7 @@ async function fetchAnime(Request: Request, Response: Response) {
     const limit = Request.query.limit;
     const skip = Request.query.skip;
     const key = JSON.stringify("Anime" + limit + skip);
+    logger.info(`Method : ${Request.method} IP : ${Request.ip} Query : ${key}`);
 
     const cacheExisted = await redisCaches.getData(key);
     if (cacheExisted) {
@@ -42,6 +46,7 @@ async function fetchAnime(Request: Request, Response: Response) {
 
     Response.json(new ApiResponse(200, "ok", true, { ...data }));
   } catch (error: any) {
+    logger.error(`Error : ${error.message}`);
     Response.json(
       new ApiResponse(
         error.statusCode || 500,
@@ -58,6 +63,7 @@ async function fetchManga(Request: Request, Response: Response) {
     const limit = Request.query.limit;
     const skip = Request.query.skip;
     const key = JSON.stringify("Manga" + limit + skip);
+    logger.info(`Method : ${Request.method} IP : ${Request.ip} Query : ${key}`);
     const cacheExisted = await redisCaches.getData(key);
     if (cacheExisted) {
       Response.json(
@@ -73,6 +79,7 @@ async function fetchManga(Request: Request, Response: Response) {
 
     Response.json(new ApiResponse(200, "ok", true, { ...data }));
   } catch (error: any) {
+    logger.error(`Error : ${error.message}`);
     Response.json(
       new ApiResponse(
         error.statusCode || 500,
@@ -87,8 +94,10 @@ async function fetchManga(Request: Request, Response: Response) {
 async function fetchGerne(Request: Request, Response: Response) {
   try {
     const data = await Genres.find();
+    logger.info(`Method : ${Request.method} IP : ${Request.ip}`);
     Response.json(new ApiResponse(200, "ok", true, { ...data }));
   } catch (error: any) {
+    logger.error(`Error : ${error.message}`);
     Response.json(
       new ApiResponse(
         error.statusCode || 500,
@@ -110,6 +119,7 @@ async function fetchSpecifyGrenesAnime(Request: Request, Response: Response) {
     }
 
     const key = JSON.stringify("Anime" + types + limit + skip);
+    logger.info(`Method : ${Request.method} IP : ${Request.ip} Query : ${key}`);
 
     const cacheExisted = await redisCaches.getData(key);
     if (cacheExisted) {
@@ -126,6 +136,7 @@ async function fetchSpecifyGrenesAnime(Request: Request, Response: Response) {
     await redisCaches.setData(key, JSON.stringify(data), 30);
     Response.json(new ApiResponse(200, "ok", true, { ...data }));
   } catch (error: any) {
+    logger.error(`Error : ${error.message}`);
     Response.json(
       new ApiResponse(
         error.statusCode || 500,
